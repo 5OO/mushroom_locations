@@ -15,6 +15,7 @@ public class MushroomLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String name;
     @Column(name = "coordinates", columnDefinition = "geometry")
     private Geometry coordinates;
     private String description;
