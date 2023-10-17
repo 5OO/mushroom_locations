@@ -1,8 +1,13 @@
 package com.gis_team.mushroom_locations.controller;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gis_team.mushroom_locations.model.MushroomLocation;
 import com.gis_team.mushroom_locations.service.MushroomLocationService;
+import org.geolatte.geom.json.GeolatteGeomModule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +27,25 @@ public class MushroomLocationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MushroomLocation> getLocationById(@PathVariable Integer id) {
+    public ResponseEntity<String> getLocationById(@PathVariable Integer id) {
         Optional<MushroomLocation> mushroomLocationOptional = locationService.getLocationById(id);
         if (!mushroomLocationOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(mushroomLocationOptional.get());
+        MushroomLocation location = mushroomLocationOptional.get();
+        String geoJsonOutput = convertToGeoJson(location);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/geo+json")).body(geoJsonOutput);
+    }
+
+    private String convertToGeoJson(MushroomLocation location) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new GeolatteGeomModule());
+
+        try {
+            return mapper.writeValueAsString(location.getCoordinates());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error converting Geometry to GeoJSON ",e);
+        }
     }
 
     @PostMapping
