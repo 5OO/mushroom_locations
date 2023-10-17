@@ -4,10 +4,7 @@ import com.gis_team.mushroom_locations.model.MushroomLocation;
 import com.gis_team.mushroom_locations.service.MushroomLocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,4 +30,20 @@ public class MushroomLocationController {
         return ResponseEntity.ok(mushroomLocationOptional.get());
     }
 
+    @PostMapping
+    public ResponseEntity<MushroomLocation> addLocation(@RequestBody MushroomLocation location) {
+        return ResponseEntity.ok(locationService.addLocation(location));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MushroomLocation> updateLocation(@PathVariable Integer id, @RequestBody MushroomLocation location) {
+        location.setId(id);
+        return ResponseEntity.ok(locationService.updateLocation(location));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLocation(@PathVariable Integer id) {
+        locationService.deleteLocation(id);
+        return ResponseEntity.noContent().build();
+    }
 }
