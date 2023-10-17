@@ -3,6 +3,10 @@ package com.gis_team.mushroom_locations.repository;
 import com.gis_team.mushroom_locations.model.MushroomLocation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MushroomLocationRepository extends JpaRepository <MushroomLocation, Long> {
+import java.util.List;
+
+public interface MushroomLocationRepository extends JpaRepository <MushroomLocation, Integer> {
+
+    List<MushroomLocation> findByName(String name);
 
 }
