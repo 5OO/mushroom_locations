@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Data
@@ -16,7 +16,7 @@ public class MushroomLocation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    @Column(name = "coordinates", columnDefinition = "geometry")
-    private Geometry coordinates;
+    @Column(name = "coordinates", columnDefinition = "geometry(Point,3301)")
+    private Point coordinates;
     private String description;
 }
